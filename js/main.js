@@ -2,53 +2,59 @@ const piedraOpcion = document.getElementById("piedra");
 const papelOpcion = document.getElementById("papel");
 const tijeraOpcion = document.getElementById("tijera");
 
-
-/*leemos la entrada del resultado */
-
+/* Leemos la entrada del resultado */
 const resultadoJuego = document.getElementById("resultado");
 
-//iniciamos el juego
-piedraOpcion.addEventListener("click", () =>{
-    iniciarJuego('piedra');
+let jugador1Movimiento = null;
+let jugador2Movimiento = null;
+let turnoJugador = 1; // Inicia el turno con el Jugador 1
+
+// Iniciamos el juego
+piedraOpcion.addEventListener("click", () => {
+    movimientoJugador('piedra');
 });
 
-papelOpcion.addEventListener("click", () =>{
-    iniciarJuego('papel');
+papelOpcion.addEventListener("click", () => {
+    movimientoJugador('papel');
 });
 
-tijeraOpcion.addEventListener("click", () =>{
-    iniciarJuego('tijera');
+tijeraOpcion.addEventListener("click", () => {
+    movimientoJugador('tijera');
 });
 
-function iniciarJuego(opcion){
-    //movimiento pc
-    const PC = movimientoPc();
-    //movimiento usuario
-    const Usuario = opcion;
-    //comparacion de movimiento
-    const comp = comparacion(PC, Usuario);
-    //resultado
-    if (comp ==1) {
-        resultadoJuego.innerHTML = " Usuario elige "+Usuario + "<br> Pc elige "+ PC+ "<br> <span class='ganador'>El ganador es usted :) <br></span>";
+// Función para manejar el movimiento de ambos jugadores
+function movimientoJugador(opcion) {
+    if (turnoJugador === 1) {
+        jugador1Movimiento = opcion;
+        resultadoJuego.innerHTML = "Jugador 1 eligió " + opcion + ". Turno del Jugador 2...";
+        turnoJugador = 2;
+    } else if (turnoJugador === 2) {
+        jugador2Movimiento = opcion;
+        resultadoJuego.innerHTML = "Jugador 2 eligió " + opcion;
+        compararMovimientos();
+        turnoJugador = 1; // Reinicia el turno al Jugador 1
     }
-    if (comp ==2) {
-        resultadoJuego.innerHTML = " Usuario elige "+Usuario + "<br> Pc elige "+ PC+ "<br> <span class='perdedor'>El perdedor es usted :(</span>";
-    }
-    if (comp ==3) {
-        resultadoJuego.innerHTML = " Usuario elige "+Usuario + "<br> Pc elige "+ PC+ "<br> <span class='empate'>La partida es un empate </span>";
+}
+
+function compararMovimientos() {
+    if (jugador1Movimiento && jugador2Movimiento) {
+        const comp = comparacion(jugador1Movimiento, jugador2Movimiento);
+        if (comp === 1) {
+            resultadoJuego.innerHTML += "<br>¡Jugador 1 gana!";
+        } else if (comp === 2) {
+            resultadoJuego.innerHTML += "<br>¡Jugador 2 gana!";
+        } else {
+            resultadoJuego.innerHTML += "<br>La partida es un empate.";
+        }
+        jugador1Movimiento = null;
+        jugador2Movimiento = null;
     }
 }
 
 
-function movimientoPc(){
-    const opciones = ['piedra', 'papel', 'tijera'];
-    const random = Math.floor(Math.random()*3);
-    const mov = opciones[random];
-    return (mov);
-}
 
-function comparacion(pc, usuario){
-    switch (usuario+pc){
+function comparacion(jugador1, jugador2){
+    switch (jugador1+jugador2){
         case 'piedratijera':
         case 'papelpiedra':
         case 'tijerapapel':
@@ -62,4 +68,16 @@ function comparacion(pc, usuario){
         case 'tijeratijera':
             return 3; //empata
     }
+}
+const empezarDeNuevoBoton = document.getElementById("empezarDeNuevo");
+
+empezarDeNuevoBoton.addEventListener("click", () => {
+    reiniciarJuego();
+});
+
+function reiniciarJuego() {
+    jugador1Movimiento = null;
+    jugador2Movimiento = null;
+    turnoJugador = 1;
+    resultadoJuego.innerHTML = "¡Juego reiniciado! Esperando movimientos...";
 }

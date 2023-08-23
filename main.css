@@ -54,3 +54,14 @@ header{
     font-size: 25px;
     
 }
+
+.boton-empezar{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-left: 740px;
+    background-color: red;
+    width: 80px;
+    cursor: pointer;
+    height: 50px;
+}
